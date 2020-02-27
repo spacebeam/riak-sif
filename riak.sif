@@ -27,7 +27,7 @@ MirrorURL: http://ftp.us.debian.org/debian/
     SIF_HOST=$(hostname -I)
     sed -i 's/riak@127.0.0.1/riak@'"$SIF_HOST"'/g' /etc/riak/riak.conf
     sed -i 's/## ring_size = 64/ring_size = 128/g' /etc/riak/riak.conf
-    sed -i 's/storage_backend = bitcast/storage_backend = leveldb/g' /etc/riak/riak.conf
+    sed -i 's/storage_backend = bitcask/storage_backend = leveldb/g' /etc/riak/riak.conf
 
 %startscript
     service riak start
