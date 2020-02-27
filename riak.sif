@@ -1,0 +1,29 @@
+BootStrap: debootstrap
+OSVersion: buster
+MirrorURL: http://ftp.us.debian.org/debian/
+
+%environment
+    LANG=C.UTF-8
+    LC_ALL=C.UTF-8
+
+%labels
+    name riak
+    maintainer jchassoul
+    version 0.1.0
+
+%post
+    sed -i 's/$/ contrib/' /etc/apt/sources.list
+    sed -i 's/$/ non-free/' /etc/apt/sources.list
+    apt update
+    apt -y install --install-recommends git apt-transport-https\
+    gnupg2 wget software-properties-common curl build-essential\
+    gfortran pkg-config make cmake libyaml-0-2 libyaml-dev vim
+    cd /usr/src && git clone https://github.com/spacebeam/riak-sif.git
+
+%runscript
+    SIF_HOST=$(hostname -I)
+    sed -i 's/riak@127.0.0.1/riak@'"$SIF_HOST"'/g' /etc/riak/riak.conf
+    sed -i 's/## ring_size = 64/ring_size = 128/g' /etc/riak/riak.conf
+
+%startscript
+    service riak start
